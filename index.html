@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EtikaSosial — ruang belajar etika bermedia sosial, layanan pengaduan, dan konsultasi bersama customer service digital." />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>EtikaSosial — Etika Bermedia Sosial yang Baik dan Benar</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="is-guest">
+  <a class="skip-link" href="#mainContent">Lompat ke konten utama</a>
+
+  <!-- ================= HEADER / NAVIGASI (tampil di semua halaman) ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="#beranda" aria-label="EtikaSosial, kembali ke beranda">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-3.8-.8L3 21l1.9-4.6A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4Z" />
+            <path d="M8.5 10.5h7M8.5 14h4.5" />
+          </svg>
+        </span>
+        <span class="brand-text">Etika<em>Sosial</em></span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Navigasi utama">
+        <a class="nav-link" href="#beranda" data-nav="beranda">Beranda</a>
+        <a class="nav-link" href="#dashboard" data-nav="dashboard" data-role="user">Buat Laporan</a>
+        <a class="nav-link" href="#admin" data-nav="admin" data-role="admin">Jawab Laporan</a>
+        <a class="nav-link" href="#tentang" data-nav="tentang">Tentang Saya</a>
+        <a class="nav-link" href="#kontak" data-nav="kontak">Kontak</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Ganti tema terang atau gelap" title="Ganti tema">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" />
+            <path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+          </svg>
+        </button>
+
+        <div class="auth-area" id="authArea"></div>
+
+        <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mainNav">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="header-progress" id="headerProgress" aria-hidden="true"></div>
+  </header>
+
+  <main id="mainContent">
+
+    <!-- ============================================================
+         HALAMAN 1 — BERANDA
+         ============================================================ -->
+    <section class="page is-active" id="page-beranda" aria-labelledby="berandaTitle">
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-orb hero-orb--one" aria-hidden="true"></div>
+        <div class="hero-orb hero-orb--two" aria-hidden="true"></div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Ruang Aman untuk Belajar Etika Digital</p>
+            <h1 class="hero-title reveal" id="berandaTitle">
+              Berperilaku Sopan di Dunia Maya,<br />
+              <span class="gradient-text">Bukan Sekadar Aturan.</span>
+            </h1>
+            <p class="hero-lead reveal">
+              EtikaSosial adalah ruang konsultasi dan pengaduan seputar etika bermedia sosial.
+              Ceritakan keluhanmu, dan customer service kami akan membantu menemukan penyelesaian
+              yang manusiawi, masuk akal, dan bisa langsung kamu terapkan.
+            </p>
+            <div class="hero-actions reveal">
+              <a class="btn btn-primary" href="#layanan" data-scroll>
+                Mulai Konsultasi
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </a>
+              <a class="btn btn-ghost" href="#artikel">Baca Panduan</a>
+            </div>
+            <dl class="hero-stats reveal">
+              <div class="stat">
+                <dt>Panduan</dt>
+                <dd><span class="counter" data-count="3">0</span><span class="stat-plus">+</span></dd>
+              </div>
+              <div class="stat">
+                <dt>Kategori Laporan</dt>
+                <dd><span class="counter" data-count="8">0</span></dd>
+              </div>
+              <div class="stat">
+                <dt>Biaya Layanan Gratis</dt>
+                <dd><span class="counter" data-count="0">0</span><span class="stat-unit">Rp</span></dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="hero-visual reveal">
+            <figure class="hero-frame">
+              <img
+                src="https://images.pexels.com/photos/607812/pexels-photo-607812.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                alt="Tangan memegang ponsel yang menampilkan folder aplikasi jejaring sosial seperti Facebook, Instagram, dan WhatsApp"
+                width="1200" height="800" loading="eager" />
+              <figcaption class="hero-caption">
+                Sumber gambar: <a href="https://www.pexels.com/photo/607812/" target="_blank" rel="noopener noreferrer">Pexels</a> — lisensi bebas royalti.
+              </figcaption>
+            </figure>
+
+            <div class="float-card float-card--top" aria-hidden="true">
+              <span class="float-icon float-icon--gold">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 4 4 11-11" /></svg>
+              </span>
+              <div>
+                <strong>Balasan &lt; 2 menit</strong>
+                <small>Simulasi CS aktif</small>
+              </div>
+            </div>
+
+            <div class="float-card float-card--bottom" aria-hidden="true">
+              <span class="float-icon float-icon--mint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.4 4.5 4.5 0 0 1 19.5 11c0 5.4-7.5 10-7.5 10Z" /></svg>
+              </span>
+              <div>
+                <strong>Tanpa menghakimi</strong>
+                <small>Fokus pada solusi</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NILAI / PRINSIP -->
+      <div class="container">
+        <ul class="value-strip reveal" aria-label="Prinsip layanan">
+          <li><span class="value-num">01</span> Empati sebelum menghakimi</li>
+          <li><span class="value-num">02</span> Verifikasi sebelum membagikan</li>
+          <li><span class="value-num">03</span> Jejak digital adalah reputasi</li>
+          <li><span class="value-num">04</span> Kritik boleh, kasar jangan</li>
+        </ul>
+      </div>
+
+      <!-- LAYANAN CS -->
+      <section class="section" id="layanan" aria-labelledby="layananTitle">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Layanan Customer Service</p>
+            <h2 id="layananTitle">Ceritakan keluhanmu, kami bantu carikan jalan keluar.</h2>
+            <p class="section-desc">
+              Ini adalah simulasi percakapan antara <strong>user</strong> dan <strong>customer service (CS)</strong>.
+              Tulis masalahmu, lalu CS akan memberi tanggapan beserta langkah penyelesaiannya.
+              Ingin ditangani lebih lanjut? Buat tiket pengaduan setelah masuk.
+            </p>
+          </div>
+
+          <div class="cs-layout">
+            <div class="chat-card reveal" aria-label="Jendela percakapan customer service">
+              <div class="chat-head">
+                <span class="cs-avatar" aria-hidden="true">BT</span>
+                <div class="cs-identity">
+                  <strong>Bot — Customer Service</strong>
+                  <span class="cs-status"><span class="status-dot" aria-hidden="true"></span>Online · Etika Digital</span>
+                </div>
+                <button class="chat-reset" id="chatReset" type="button" title="Mulai percakapan baru">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.3M20 5v6h-6" /></svg>
+                  <span>Reset</span>
+                </button>
+              </div>
+
+              <div class="chat-body" id="chatBody" role="log" aria-live="polite" aria-label="Riwayat percakapan"></div>
+
+              <div class="chat-suggest" id="chatSuggest" aria-label="Contoh pertanyaan"></div>
+
+              <form class="chat-form" id="chatForm" autocomplete="off">
+                <label class="sr-only" for="chatInput">Tulis pesan untuk customer service</label>
+                <input id="chatInput" name="chatInput" type="text" placeholder="Contoh: saya dapat komentar kasar di postingan saya..." maxlength="500" required />
+                <button class="chat-send" type="submit" aria-label="Kirim pesan">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-2.5-6.5L4 12Z" /></svg>
+                </button>
+              </form>
+            </div>
+
+            <aside class="cs-side reveal">
+              <div class="side-card">
+                <h3>Yang bisa kamu laporkan</h3>
+                <ul class="check-list">
+                  <li>Ujaran kebencian &amp; perundungan</li>
+                  <li>Penyebaran hoaks atau fitnah</li>
+                  <li>Penyalahgunaan data pribadi</li>
+                  <li>Pencurian konten &amp; hak cipta</li>
+                  <li>Spam, penipuan, dan phishing</li>
+                  <li>Akun palsu atau pembajakan akun</li>
+                </ul>
+              </div>
+
+              <div class="side-card side-card--accent">
+                <h3>Butuh penanganan resmi?</h3>
+                <p>Buat tiket agar keluhanmu tercatat, terlacak statusnya, dan dibalas langsung oleh admin (CS).</p>
+                <button class="btn btn-primary btn-block" id="openTicketBtn" type="button">Buat Tiket Pengaduan</button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ARTIKEL -->
+      <section class="section section--alt" id="artikel" aria-labelledby="artikelTitle">
+        <div class="container">
+          <div class="section-head section-head--split reveal">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Artikel Pilihan</p>
+              <h2 id="artikelTitle">Tiga panduan untuk bermedia sosial lebih dewasa.</h2>
+            </div>
+            <p class="section-desc">
+              Setiap artikel ditulis sendiri, dilengkapi kategori, tag, dan gambar unggulan berlisensi bebas.
+              Klik kartu untuk membaca versi lengkapnya.
+            </p>
+          </div>
+
+          <div class="post-grid">
+            <article class="post-card reveal" data-post="komentar-empati">
+              <a class="post-media" href="#artikel/komentar-empati" data-open-post="komentar-empati" aria-label="Baca artikel: Berkometar dengan Empati">
+                <img
+                  src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=900"
+                  alt="Seorang perempuan mengetik di laptop di atas meja putih, ditemani buku catatan, ponsel, dan secangkir kopi"
+                  width="900" height="600" loading="lazy" />
+                <span class="post-category">Etika Digital</span>
+              </a>
+              <div class="post-body">
+                <div class="post-meta">
+                  <span>6 menit baca</span>
+                  <span aria-hidden="true">·</span>
+                  <time datetime="2026-10-14">14 Okt 2026</time>
+                </div>
+                <h3><a href="#artikel/komentar-empati" data-open-post="komentar-empati">Berkomentar dengan Empati: Seni Menyampaikan Kritik di Ruang Digital</a></h3>
+                <p class="post-excerpt">
+                  Kritik pedas tidak selalu berarti tegas, dan sopan tidak selalu berarti lemah.
+                  Inilah cara memisahkan kritik dari serangan pribadi.
+                </p>
+                <div class="post-tags" aria-label="Tag artikel">
+                  <span class="tag">#KomentarSehat</span>
+                  <span class="tag">#EmpatiDigital</span>
+                  <span class="tag">#KritikKonstruktif</span>
+                </div>
+                <p class="post-source">
+                  Gambar: <a href="https://www.pexels.com/photo/4050315/" target="_blank" rel="noopener noreferrer">Pexels</a> (lisensi bebas royalti)
+                </p>
+              </div>
+            </article>
+
+            <article class="post-card reveal" data-post="jejak-digital">
+              <a class="post-media" href="#artikel/jejak-digital" data-open-post="jejak-digital" aria-label="Baca artikel: Jejak Digital">
+                <img
+                  src="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=900"
+                  alt="Tampilan dekat deretan ikon media sosial seperti Instagram, Facebook, Twitter, dan YouTube pada layar ponsel"
+                  width="900" height="600" loading="lazy" />
+                <span class="post-category">Privasi &amp; Keamanan</span>
+              </a>
+              <div class="post-body">
+                <div class="post-meta">
+                  <span>7 menit baca</span>
+                  <span aria-hidden="true">·</span>
+                  <time datetime="2026-10-21">21 Okt 2026</time>
+                </div>
+                <h3><a href="#artikel/jejak-digital" data-open-post="jejak-digital">Jejak Digital: Mengapa Unggahan Masa Lalu Bisa Menentukan Masa Depanmu</a></h3>
+                <p class="post-excerpt">
+                  Internet tidak pernah benar-benar lupa. Sebelum mengunggah, ada baiknya kamu tahu
+                  siapa yang mungkin membaca lima tahun dari sekarang.
+                </p>
+                <div class="post-tags" aria-label="Tag artikel">
+                  <span class="tag">#JejakDigital</span>
+                  <span class="tag">#Privasi</span>
+                  <span class="tag">#ReputasiOnline</span>
+                </div>
+                <p class="post-source">
+                  Gambar: <a href="https://www.pexels.com/photo/267350/" target="_blank" rel="noopener noreferrer">Pexels</a> (lisensi bebas royalti)
+                </p>
+              </div>
+            </article>
+
+            <article class="post-card reveal" data-post="verifikasi-hoaks">
+              <a class="post-media" href="#artikel/verifikasi-hoaks" data-open-post="verifikasi-hoaks" aria-label="Baca artikel: Verifikasi Sebelum Membagikan">
+                <img
+                  src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=900"
+                  alt="Enam tangan saling menumpuk di atas meja kerja kayu sebagai simbol kerja sama, dengan laptop dan dokumen di sekitarnya"
+                  width="900" height="600" loading="lazy" />
+                <span class="post-category">Literasi Digital</span>
+              </a>
+              <div class="post-body">
+                <div class="post-meta">
+                  <span>6 menit baca</span>
+                  <span aria-hidden="true">·</span>
+                  <time datetime="2026-10-28">28 Okt 2026</time>
+                </div>
+                <h3><a href="#artikel/verifikasi-hoaks" data-open-post="verifikasi-hoaks">Verifikasi Sebelum Membagikan: Melawan Hoaks Tanpa Ikut Menyebarkannya</a></h3>
+                <p class="post-excerpt">
+                  Satu klik "bagikan" bisa menghancurkan reputasi seseorang. Kenali ciri hoaks
+                  dan lima langkah sederhana untuk memeriksanya.
+                </p>
+                <div class="post-tags" aria-label="Tag artikel">
+                  <span class="tag">#AntiHoaks</span>
+                  <span class="tag">#FaktaCek</span>
+                  <span class="tag">#LiterasiDigital</span>
+                </div>
+                <p class="post-source">
+                  Gambar: <a href="https://www.pexels.com/photo/3184418/" target="_blank" rel="noopener noreferrer">Pexels</a> (lisensi bebas royalti)
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section" aria-labelledby="ctaTitle">
+        <div class="container">
+          <div class="cta-banner reveal">
+            <div class="cta-glow" aria-hidden="true"></div>
+            <h2 id="ctaTitle">Etika digital dimulai dari satu keputusan kecil: berpikir sebelum menekan kirim.</h2>
+            <p>Punya keluhan atau pertanyaan? Sampaikan lewat tiket pengaduan agar tercatat dan dibalas langsung oleh admin.</p>
+            <div class="cta-actions">
+              <a class="btn btn-primary" href="#kontak">Hubungi Kami</a>
+              <a class="btn btn-ghost" href="#artikel" data-scroll>Baca Artikel</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ============================================================
+         HALAMAN 2 — TENTANG SAYA
+         ============================================================ -->
+    <section class="page" id="page-tentang" aria-labelledby="tentangTitle">
+      <div class="page-hero">
+        <div class="container">
+          <p class="eyebrow reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Tentang Saya</p>
+          <h1 class="page-title reveal" id="tentangTitle">Menjaga percakapan tetap manusiawi di ruang yang serba cepat.</h1>
+          <p class="page-lead reveal">
+            EtikaSosial lahir dari satu pengalaman sederhana: membaca komentar yang saling melukai
+            di kolom unggahan seorang remaja. Sejak itu, saya percaya bahwa literasi digital
+            bukan hanya soal bisa memakai aplikasi, tetapi soal tahu kapan berhenti.
+          </p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="container about-grid">
+          <figure class="about-photo reveal">
+            <img
+              src="assets/fadil.jpg"
+              alt="Fadil, pengelola EtikaSosial, memakai kemeja putih, dasi navy, dan blazer hijau dengan latar merah marun"
+              width="716" height="895" loading="lazy" />
+            <figcaption>Fadil — pengelola EtikaSosial.</figcaption>
+          </figure>
+
+          <div class="about-copy">
+            <h2 class="reveal">Halo, saya Fadil, pengelola EtikaSosial.</h2>
+            <p class="reveal">
+              Saya bukan penegak hukum dan tidak mewakili platform mana pun. Peran saya di sini
+              adalah menjadi <strong>customer service sekaligus pendamping</strong>: mendengarkan
+              keluhanmu, membantu memetakan masalah, lalu menawarkan langkah penyelesaian yang
+              realistis — mulai dari cara membalas komentar, melaporkan akun, hingga mengamankan data pribadi.
+            </p>
+            <p class="reveal">
+              Setiap laporan yang masuk saya perlakukan sebagai cerita, bukan statistik. Tidak ada
+              pertanyaan yang terlalu sepele, karena dampak ujaran di media sosial sering jauh lebih
+              besar daripada yang terlihat di layar.
+            </p>
+
+            <div class="about-values">
+              <div class="value-card reveal">
+                <span class="value-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8h14M5 16h14" /></svg>
+                </span>
+                <h3>Netral &amp; tidak menghakimi</h3>
+                <p>Setiap laporan didengar tanpa prasangka, siapa pun pelakunya dan apa pun latar belakangnya.</p>
+              </div>
+              <div class="value-card reveal">
+                <span class="value-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.4 4.5 4.5 0 0 1 19.5 11c0 5.4-7.5 10-7.5 10Z" /></svg>
+                </span>
+                <h3>Berpihak pada korban</h3>
+                <p>Fokus utama adalah memulihkan rasa aman, bukan mempermalukan pihak mana pun di ruang publik.</p>
+              </div>
+              <div class="value-card reveal">
+                <span class="value-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a1 1 0 0 1 1-1h11l4 4v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z" /><path d="M8 12h8M8 16h5" /></svg>
+                </span>
+                <h3>Berbasis bukti</h3>
+                <p>Setiap saran penyelesaian disertai dasar: tangkapan layar, aturan platform, atau rujukan etika.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section section--alt">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Perjalanan</p>
+            <h2>Bagaimana layanan ini bekerja.</h2>
+          </div>
+          <ol class="timeline">
+            <li class="timeline-item reveal">
+              <span class="timeline-year">Langkah 1</span>
+              <h3>Ceritakan</h3>
+              <p>Kamu menuliskan kronologi, menyertakan bukti bila ada, dan memilih kategori laporan.</p>
+            </li>
+            <li class="timeline-item reveal">
+              <span class="timeline-year">Langkah 2</span>
+              <h3>Diverifikasi</h3>
+              <p>Admin memeriksa kelengkapan informasi dan mengidentifikasi jenis pelanggaran etika.</p>
+            </li>
+            <li class="timeline-item reveal">
+              <span class="timeline-year">Langkah 3</span>
+              <h3>Ditanggapi</h3>
+              <p>Kamu menerima tanggapan berisi langkah penyelesaian, rujukan aturan, dan saran pencegahan.</p>
+            </li>
+            <li class="timeline-item reveal">
+              <span class="timeline-year">Langkah 4</span>
+              <h3>Tuntas</h3>
+              <p>Tiket ditutup setelah masalah selesai, dan riwayatnya tetap tersimpan di dasbor akunmu.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="container">
+          <div class="skill-panel reveal">
+            <h2>Bidang yang saya dampingi</h2>
+            <div class="skill-tags">
+              <span class="skill-tag">Etika berkomentar</span>
+              <span class="skill-tag">Anti-perundungan siber</span>
+              <span class="skill-tag">Verifikasi informasi</span>
+              <span class="skill-tag">Privasi data pribadi</span>
+              <span class="skill-tag">Hak cipta konten</span>
+              <span class="skill-tag">Keamanan akun</span>
+              <span class="skill-tag">Pelaporan konten</span>
+              <span class="skill-tag">Kesehatan mental digital</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HALAMAN 3 — KONTAK
+         ============================================================ -->
+    <section class="page" id="page-kontak" aria-labelledby="kontakTitle">
+      <div class="page-hero">
+        <div class="container">
+          <p class="eyebrow reveal"><span class="eyebrow-dot" aria-hidden="true"></span>Kontak</p>
+          <h1 class="page-title reveal" id="kontakTitle">Ada yang ingin kamu sampaikan?</h1>
+          <p class="page-lead reveal">
+            Gunakan formulir di bawah untuk pertanyaan umum, kerja sama, atau masukan.
+            Untuk keluhan yang perlu ditindaklanjuti, sebaiknya buat tiket pengaduan agar
+            statusnya bisa kamu pantau.
+          </p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="container contact-grid">
+          <div class="contact-info">
+            <div class="info-card reveal">
+              <span class="info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6 8.5-6" /></svg>
+              </span>
+              <h3>Surel</h3>
+              <p><a href="mailto:EtikaSosial@gmail.com">EtikaSosial@gmail.com</a></p>
+              <small>Dibalas maksimal 1×24 jam kerja.</small>
+            </div>
+            <div class="info-card reveal">
+              <span class="info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
+              </span>
+              <h3>Jam Layanan</h3>
+              <p>Senin–Jumat, 08.00–20.00 WIB</p>
+              <small>Sabtu–Minggu: hanya tiket prioritas.</small>
+            </div>
+            <div class="info-card reveal">
+              <span class="info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+              </span>
+              <h3>Lokasi</h3>
+              <p>Surabaya, Indonesia</p>
+              <small>Layanan sepenuhnya daring.</small>
+            </div>
+          </div>
+
+          <form class="contact-form reveal" id="contactForm" novalidate>
+            <h2>Kirim pesan</h2>
+            <div class="form-row">
+              <div class="field">
+                <label for="contactName">Nama lengkap</label>
+                <input id="contactName" name="name" type="text" placeholder="Nama kamu" required minlength="2" />
+                <span class="field-error" data-error-for="contactName"></span>
+              </div>
+              <div class="field">
+                <label for="contactEmail">Alamat surel</label>
+                <input id="contactEmail" name="email" type="email" placeholder="nama@email.com" required />
+                <span class="field-error" data-error-for="contactEmail"></span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="contactSubject">Subjek</label>
+              <input id="contactSubject" name="subject" type="text" placeholder="Misalnya: pertanyaan tentang artikel" required minlength="3" />
+              <span class="field-error" data-error-for="contactSubject"></span>
+            </div>
+            <div class="field">
+              <label for="contactMessage">Pesan</label>
+              <textarea id="contactMessage" name="message" rows="6" placeholder="Tuliskan pesanmu di sini..." required minlength="20"></textarea>
+              <span class="field-error" data-error-for="contactMessage"></span>
+              <span class="field-hint"><span id="contactCount">0</span>/1000 karakter (minimal 20)</span>
+            </div>
+            <label class="checkbox">
+              <input id="contactConsent" name="consent" type="checkbox" required />
+              <span>Saya setuju pesan ini disimpan untuk keperluan tindak lanjut.</span>
+            </label>
+            <span class="field-error" data-error-for="contactConsent"></span>
+            <button class="btn btn-primary btn-block" type="submit">
+              Kirim Pesan
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-2.5-6.5L4 12Z" /></svg>
+            </button>
+            <p class="form-footnote">Data hanya disimpan di peramban kamu (localStorage) untuk keperluan demo.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HALAMAN 4 — MASUK / DAFTAR
+         ============================================================ -->
+    <section class="page" id="page-masuk" aria-labelledby="masukTitle">
+      <div class="section auth-section">
+        <div class="container auth-wrap">
+          <h1 class="sr-only" id="masukTitle">Masuk atau Daftar — EtikaSosial</h1>
+
+          <div class="auth-card reveal">
+            <div class="auth-tabs" role="tablist" aria-label="Pilih masuk atau daftar">
+              <button class="auth-tab is-active" id="tabLogin" type="button" role="tab" aria-selected="true" aria-controls="loginForm">Masuk</button>
+              <button class="auth-tab" id="tabRegister" type="button" role="tab" aria-selected="false" aria-controls="registerForm">Daftar</button>
+            </div>
+
+            <form class="auth-form is-active" id="loginForm" novalidate>
+              <h2>Selamat datang kembali</h2>
+              <div class="field">
+                <label for="loginEmail">Surel atau nama pengguna</label>
+                <input id="loginEmail" name="email" type="text" placeholder="nama@email.com" autocomplete="username" required />
+                <span class="field-error" data-error-for="loginEmail"></span>
+              </div>
+              <div class="field">
+                <label for="loginPassword">Kata sandi</label>
+                <div class="password-wrap">
+                  <input id="loginPassword" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required minlength="6" />
+                  <button class="password-toggle" type="button" data-toggle-password="loginPassword" aria-label="Tampilkan kata sandi">Lihat</button>
+                </div>
+                <span class="field-error" data-error-for="loginPassword"></span>
+              </div>
+              <button class="btn btn-primary btn-block" type="submit">Masuk ke Akun</button>
+              <p class="auth-switch">Belum punya akun? <button type="button" class="link-btn" data-auth-switch="register">Daftar sekarang</button></p>
+            </form>
+
+            <form class="auth-form" id="registerForm" novalidate>
+              <h2>Buat akun baru</h2>
+              <div class="field">
+                <label for="registerName">Nama lengkap</label>
+                <input id="registerName" name="name" type="text" placeholder="Nama kamu" autocomplete="name" required minlength="2" />
+                <span class="field-error" data-error-for="registerName"></span>
+              </div>
+              <div class="field">
+                <label for="registerEmail">Alamat surel</label>
+                <input id="registerEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required />
+                <span class="field-error" data-error-for="registerEmail"></span>
+              </div>
+              <div class="field">
+                <label for="registerPassword">Kata sandi</label>
+                <div class="password-wrap">
+                  <input id="registerPassword" name="password" type="password" placeholder="Minimal 6 karakter" autocomplete="new-password" required minlength="6" />
+                  <button class="password-toggle" type="button" data-toggle-password="registerPassword" aria-label="Tampilkan kata sandi">Lihat</button>
+                </div>
+                <span class="field-error" data-error-for="registerPassword"></span>
+              </div>
+              <div class="field">
+                <label for="registerConfirm">Ulangi kata sandi</label>
+                <input id="registerConfirm" name="confirm" type="password" placeholder="Ulangi kata sandi" autocomplete="new-password" required minlength="6" />
+                <span class="field-error" data-error-for="registerConfirm"></span>
+              </div>
+              <label class="checkbox">
+                <input id="registerConsent" name="consent" type="checkbox" required />
+                <span>Saya menyetujui aturan komunitas dan pengelolaan data untuk keperluan layanan.</span>
+              </label>
+              <span class="field-error" data-error-for="registerConsent"></span>
+              <button class="btn btn-primary btn-block" type="submit">Daftar sebagai User</button>
+              <p class="auth-switch">Sudah punya akun? <button type="button" class="link-btn" data-auth-switch="login">Masuk di sini</button></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HALAMAN 5 — DASBOR USER
+         ============================================================ -->
+    <section class="page" id="page-dashboard" aria-labelledby="dashboardTitle">
+      <div class="container dash">
+        <div class="dash-head reveal">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Dasbor User</p>
+            <h1 id="dashboardTitle">Halo, <span id="dashUserName">Anggota</span>.</h1>
+            <p class="page-lead">Pantau pengaduanmu, baca balasan admin, dan lanjutkan konsultasi kapan saja.</p>
+          </div>
+          <a class="btn btn-ghost" href="#layanan" data-scroll>Konsultasi CS</a>
+        </div>
+
+        <div class="stat-grid" id="userStats" aria-label="Ringkasan tiket"></div>
+
+        <div class="dash-grid">
+          <div class="panel reveal">
+            <div class="panel-head">
+              <h2>Buat pengaduan baru</h2>
+              <span class="panel-hint">Admin akan membalas di daftar tiket</span>
+            </div>
+            <form class="ticket-form" id="ticketForm" novalidate>
+              <div class="form-row">
+                <div class="field">
+                  <label for="ticketCategory">Kategori</label>
+                  <select id="ticketCategory" name="category" required>
+                    <option value="">Pilih kategori</option>
+                    <option value="Ujaran kebencian">Ujaran kebencian</option>
+                    <option value="Perundungan siber">Perundungan siber</option>
+                    <option value="Hoaks &amp; fitnah">Hoaks &amp; fitnah</option>
+                    <option value="Privasi &amp; data pribadi">Privasi &amp; data pribadi</option>
+                    <option value="Hak cipta konten">Hak cipta konten</option>
+                    <option value="Spam &amp; penipuan">Spam &amp; penipuan</option>
+                    <option value="Keamanan akun">Keamanan akun</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                  <span class="field-error" data-error-for="ticketCategory"></span>
+                </div>
+                <div class="field">
+                  <label for="ticketSubject">Subjek singkat</label>
+                  <input id="ticketSubject" name="subject" type="text" placeholder="Misalnya: komentar kasar berulang" required minlength="5" />
+                  <span class="field-error" data-error-for="ticketSubject"></span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="ticketMessage">Kronologi &amp; bukti</label>
+                <textarea id="ticketMessage" name="message" rows="5" placeholder="Ceritakan apa yang terjadi, kapan, di platform mana, dan sertakan tautan atau tangkapan layar bila ada." required minlength="30"></textarea>
+                <span class="field-error" data-error-for="ticketMessage"></span>
+                <span class="field-hint"><span id="ticketCount">0</span>/1200 karakter (minimal 30)</span>
+              </div>
+              <button class="btn btn-primary" type="submit">Kirim Pengaduan</button>
+            </form>
+          </div>
+
+          <aside class="panel panel--soft reveal">
+            <div class="panel-head">
+              <h2>Tips agar cepat ditangani</h2>
+            </div>
+            <ol class="tips-list">
+              <li>Sertakan tautan unggahan atau akun yang bermasalah.</li>
+              <li>Jangan menyebarkan ulang konten yang melukai; simpan sebagai bukti privat.</li>
+              <li>Tulis kronologi secara runtut: tanggal, platform, dan tindakan yang sudah dilakukan.</li>
+              <li>Jika ada ancaman kekerasan, segera hubungi pihak berwenang sebelum menunggu balasan.</li>
+            </ol>
+            <div class="mini-note">
+              <strong>Privasi terjaga.</strong> Data tiket hanya tersimpan di peramban ini dan tidak dikirim ke server mana pun.
+            </div>
+          </aside>
+        </div>
+
+        <div class="panel reveal">
+          <div class="panel-head">
+            <h2>Tiket saya</h2>
+            <span class="panel-hint" id="userTicketCount">0 tiket</span>
+          </div>
+          <div class="ticket-list" id="userTicketList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HALAMAN 6 — PANEL ADMIN (CS)
+         ============================================================ -->
+    <section class="page" id="page-admin" aria-labelledby="adminTitle">
+      <div class="container dash">
+        <div class="dash-head reveal">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Panel Customer Service</p>
+            <h1 id="adminTitle">Pusat pengaduan anggota.</h1>
+            <p class="page-lead">Tinjau laporan yang masuk, kirim balasan resmi, lalu tutup tiket yang sudah selesai.</p>
+          </div>
+          <span class="admin-badge">Masuk sebagai Admin</span>
+        </div>
+
+        <div class="stat-grid" id="adminStats" aria-label="Statistik pengaduan"></div>
+
+        <div class="panel reveal">
+          <div class="panel-head">
+            <h2>Daftar pengaduan</h2>
+            <div class="filter-bar" id="adminFilter" role="group" aria-label="Filter status tiket">
+              <button class="filter-btn is-active" type="button" data-filter="all">Semua</button>
+              <button class="filter-btn" type="button" data-filter="open">Terbuka</button>
+              <button class="filter-btn" type="button" data-filter="answered">Dijawab</button>
+              <button class="filter-btn" type="button" data-filter="closed">Selesai</button>
+            </div>
+          </div>
+          <div class="ticket-list ticket-list--admin" id="adminTicketList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER (tampil di semua halaman) ================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#beranda" aria-label="EtikaSosial">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-3.8-.8L3 21l1.9-4.6A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4Z" />
+              <path d="M8.5 10.5h7M8.5 14h4.5" />
+            </svg>
+          </span>
+          <span class="brand-text">Etika<em>Sosial</em></span>
+        </a>
+        <p>EtikaSosial adalah ruang belajar dan pengaduan etika bermedia sosial. Kami membantu pengguna memahami batas antara kritik dan ujaran kebencian, menghargai privasi, memverifikasi informasi sebelum membagikannya, serta melaporkan konten yang merugikan secara aman dan beradab.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Navigasi footer">
+        <h3>Halaman</h3>
+        <a href="#beranda">Beranda</a>
+        <a href="#dashboard" data-role="user">Buat Laporan</a>
+        <a href="#admin" data-role="admin">Jawab Laporan</a>
+        <a href="#artikel">Artikel</a>
+        <a href="#tentang">Tentang Saya</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Navigasi akun">
+        <h3>Akun</h3>
+        <a href="#masuk">Masuk</a>
+        <a href="#masuk" data-auth-cta="register">Daftar</a>
+      </nav>
+
+      <div class="footer-credit">
+        <h3>Sumber gambar</h3>
+        <p>Foto unggulan dan ilustrasi artikel berasal dari <a href="https://www.pexels.com/license/" target="_blank" rel="noopener noreferrer">Pexels</a> dengan lisensi bebas royalti. Foto profil adalah milik pengelola.</p>
+        <p class="footer-copy">© <span id="year">2026</span> EtikaSosial.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODAL ARTIKEL ================= -->
+  <div class="modal" id="articleModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="articleModalTitle">
+      <button class="modal-close" type="button" data-close-modal aria-label="Tutup artikel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="modal-content" id="articleModalContent"></div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST ================= -->
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ================= BACK TO TOP ================= -->
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Kembali ke atas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
