@@ -2,6 +2,10 @@
    EtikaSosial — script.js
    Berisi: tema, navigasi, router halaman, artikel, simulasi CS,
    autentikasi user/admin, tiket pengaduan, dan formulir kontak.
+
+   Data disimpan melalui API PHP di folder api/ bila situs
+   dijalankan dengan Apache/PHP. Jika dibuka tanpa PHP, script
+   otomatis memakai localStorage sebagai mode cadangan.
    ============================================================ */
 
 "use strict";
@@ -47,6 +51,86 @@ const store = {
     }
   },
 };
+
+/*
+ * Sesi disimpan di memori agar router bisa membacanya secara sinkron.
+ * Nilai awal diambil dari localStorage untuk mode cadangan tanpa PHP.
+ */
+let currentSession = store.get(STORAGE.session, null);
+
+/* ---------- 1b. Klien API PHP ---------- */
+/*
+ * Saat situs dijalankan melalui Apache + PHP, semua data disimpan di
+ * database MySQL. Jika dibuka lewat file:// atau server statis, fetch
+ * gagal dan situs otomatis memakai localStorage seperti versi lama.
+ */
+const API = (() => {
+  const base = "api/";
+  const state = { available: null };
+
+  async function request(path, options) {
+    const config = Object.assign(
+      {
+        method: "GET",
+        credentials: "same-origin",
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      },
+      options || {}
+    );
+
+    if (config.body !== undefined && typeof config.body !== "string") {
+      config.headers = Object.assign({}, config.headers, { "Content-Type": "application/json" });
+      config.body = JSON.stringify(config.body);
+    }
+
+    let response;
+    try {
+      response = await fetch(base + path, config);
+    } catch (error) {
+      state.available = false;
+      throw error;
+    }
+
+    const text = await response.text();
+    let payload;
+
+    try {
+      payload = JSON.parse(text);
+    } catch (error) {
+      if (response.ok) {
+        /* HTTP 200 tetapi bukan JSON: file PHP tidak dieksekusi. */
+        state.available = false;
+        const offline = new Error("Backend PHP tidak tersedia.");
+        offline.offline = true;
+        throw offline;
+      }
+
+      state.available = true;
+      const invalid = new Error("Server mengembalikan respons yang tidak valid.");
+      invalid.status = response.status;
+      throw invalid;
+    }
+
+    state.available = true;
+
+    if (!response.ok || !payload || payload.ok !== true) {
+      const failure = new Error((payload && payload.message) || "Permintaan gagal.");
+      failure.status = response.status;
+      failure.fields = (payload && payload.errors) || {};
+      throw failure;
+    }
+
+    return payload.data;
+  }
+
+  return {
+    request,
+    get offline() {
+      return state.available === false;
+    },
+  };
+})();
 
 const uid = (prefix = "") =>
   prefix + Math.random().toString(36).slice(2, 7) + Date.now().toString(36).slice(-4);
@@ -788,6 +872,11 @@ if (openTicketBtn) {
 }
 
 /* ---------- 11. Autentikasi ---------- */
+/*
+ * Akun admin cadangan untuk mode tanpa PHP (file:// atau server statis).
+ * Saat situs berjalan melalui Apache + PHP, autentikasi memakai tabel
+ * users dan password_hash di database, bukan data di bawah ini.
+ */
 const ADMIN_ACCOUNT = {
   id: "admin-1",
   name: "Fadil",
@@ -808,12 +897,26 @@ function saveUsers(users) {
 }
 
 function getSession() {
-  return store.get(STORAGE.session, null);
+  return currentSession;
 }
 
 function setSession(session) {
+  currentSession = session || null;
+
+  /* Simpan salinan untuk mode cadangan tanpa PHP. */
   if (session) store.set(STORAGE.session, session);
   else store.remove(STORAGE.session);
+}
+
+/* Bila server mengembalikan 401, sesi dianggap berakhir. */
+function handleExpiredSession(error) {
+  if (!error || error.status !== 401) return false;
+
+  setSession(null);
+  renderAuthArea();
+  toast("error", "Sesi berakhir", "Silakan masuk kembali.");
+  location.hash = "#masuk";
+  return true;
 }
 
 function renderAuthArea() {
@@ -841,7 +944,15 @@ function renderAuthArea() {
 
   const logoutBtn = $("#logoutBtn");
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
+    logoutBtn.addEventListener("click", async () => {
+      if (!API.offline) {
+        try {
+          await API.request("auth.php?action=logout", { method: "POST" });
+        } catch (error) {
+          /* Tetap akhiri sesi di sisi tampilan meski server tidak merespons. */
+        }
+      }
+
       setSession(null);
       renderAuthArea();
       toast("success", "Berhasil keluar", "Sesi kamu sudah diakhiri.");
@@ -915,8 +1026,31 @@ function clearErrors(ids) {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+function finishLogin(user, form) {
+  setSession(user);
+  renderAuthArea();
+  form.reset();
+
+  if (user.role === "admin") {
+    toast("success", "Selamat datang, Admin", "Panel customer service sudah terbuka.");
+    location.hash = "#admin";
+    return;
+  }
+
+  toast("success", "Berhasil masuk", "Halo, " + user.name.split(" ")[0] + "!");
+  location.hash = "#beranda";
+}
+
+function finishRegister(user, form) {
+  setSession(user);
+  renderAuthArea();
+  form.reset();
+  toast("success", "Akun berhasil dibuat", "Selamat bergabung, " + user.name.split(" ")[0] + "!");
+  location.hash = "#beranda";
+}
+
 if (loginForm) {
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearErrors(["loginEmail", "loginPassword"]);
 
@@ -934,17 +1068,38 @@ if (loginForm) {
     }
     if (!valid) return;
 
+    /* Mode PHP: autentikasi diperiksa di server dan dicatat di database. */
+    if (!API.offline) {
+      try {
+        const data = await API.request("auth.php?action=login", {
+          method: "POST",
+          body: { identifier: identifier, password: password },
+        });
+        finishLogin(data.user, loginForm);
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          const fields = error.fields || {};
+          setFieldError("loginEmail", fields.identifier || error.message);
+          setFieldError("loginPassword", fields.password || "Periksa kembali data masukmu.");
+          toast("error", "Gagal masuk", error.message);
+          return;
+        }
+        /* Backend tidak tersedia: lanjut ke mode localStorage di bawah. */
+      }
+    }
+
+    /* Mode cadangan tanpa PHP. */
     const lower = identifier.toLowerCase();
     const isAdmin =
       (lower === ADMIN_ACCOUNT.email || lower === ADMIN_ACCOUNT.altEmail) &&
       password === ADMIN_ACCOUNT.password;
 
     if (isAdmin) {
-      setSession({ id: ADMIN_ACCOUNT.id, name: ADMIN_ACCOUNT.name, email: ADMIN_ACCOUNT.email, role: "admin" });
-      renderAuthArea();
-      loginForm.reset();
-      toast("success", "Selamat datang, Admin", "Panel customer service sudah terbuka.");
-      location.hash = "#admin";
+      finishLogin(
+        { id: ADMIN_ACCOUNT.id, name: ADMIN_ACCOUNT.name, email: ADMIN_ACCOUNT.email, role: "admin" },
+        loginForm
+      );
       return;
     }
 
@@ -959,16 +1114,12 @@ if (loginForm) {
       return;
     }
 
-    setSession({ id: user.id, name: user.name, email: user.email, role: "user" });
-    renderAuthArea();
-    loginForm.reset();
-    toast("success", "Berhasil masuk", "Halo, " + user.name.split(" ")[0] + "!");
-    location.hash = "#beranda";
+    finishLogin({ id: user.id, name: user.name, email: user.email, role: "user" }, loginForm);
   });
 }
 
 if (registerForm) {
-  registerForm.addEventListener("submit", (event) => {
+  registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const ids = ["registerName", "registerEmail", "registerPassword", "registerConfirm", "registerConsent"];
     clearErrors(ids);
@@ -1000,17 +1151,42 @@ if (registerForm) {
       setFieldError("registerConsent", "Kamu perlu menyetujui aturan komunitas.");
       valid = false;
     }
+    if (!valid) return;
 
+    /* Mode PHP: akun disimpan ke tabel users dengan kata sandi ter-hash. */
+    if (!API.offline) {
+      try {
+        const data = await API.request("auth.php?action=register", {
+          method: "POST",
+          body: { name: name, email: email, password: password, consent: consent },
+        });
+        finishRegister(data.user, registerForm);
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          const fields = error.fields || {};
+          if (fields.name) setFieldError("registerName", fields.name);
+          if (fields.email) setFieldError("registerEmail", fields.email);
+          if (fields.password) setFieldError("registerPassword", fields.password);
+          if (fields.consent) setFieldError("registerConsent", fields.consent);
+          if (!Object.keys(fields).length) setFieldError("registerEmail", error.message);
+          toast("error", "Pendaftaran gagal", error.message);
+          return;
+        }
+        /* Backend tidak tersedia: lanjut ke mode localStorage di bawah. */
+      }
+    }
+
+    /* Mode cadangan tanpa PHP. */
     const users = getUsers();
     if (email === ADMIN_ACCOUNT.email || email === ADMIN_ACCOUNT.altEmail) {
       setFieldError("registerEmail", "Surel ini sudah dipakai.");
-      valid = false;
+      return;
     }
     if (users.some((item) => item.email.toLowerCase() === email)) {
       setFieldError("registerEmail", "Surel ini sudah terdaftar. Silakan masuk.");
-      valid = false;
+      return;
     }
-    if (!valid) return;
 
     const user = {
       id: uid("usr-"),
@@ -1023,11 +1199,7 @@ if (registerForm) {
 
     users.push(user);
     saveUsers(users);
-    setSession({ id: user.id, name: user.name, email: user.email, role: "user" });
-    renderAuthArea();
-    registerForm.reset();
-    toast("success", "Akun berhasil dibuat", "Selamat bergabung, " + name.split(" ")[0] + "!");
-    location.hash = "#beranda";
+    finishRegister({ id: user.id, name: user.name, email: user.email, role: "user" }, registerForm);
   });
 }
 
@@ -1048,6 +1220,23 @@ function getTickets() {
 
 function saveTickets(tickets) {
   store.set(STORAGE.tickets, tickets);
+}
+
+/*
+ * Ambil tiket dari database bila PHP tersedia.
+ * Jika tidak, pakai data localStorage sebagai mode cadangan.
+ */
+async function loadTickets() {
+  if (!API.offline) {
+    try {
+      const data = await API.request("tickets.php?action=list");
+      return Array.isArray(data.tickets) ? data.tickets : [];
+    } catch (error) {
+      if (!API.offline) throw error;
+    }
+  }
+
+  return getTickets();
 }
 
 const STATUS_LABEL = {
@@ -1184,15 +1373,34 @@ function adminTicketCard(ticket) {
   );
 }
 
-function renderUserDashboard() {
+async function renderUserDashboard() {
   const session = getSession();
   if (!session) return;
 
   const greeting = $("#dashUserName");
   if (greeting) greeting.textContent = session.name.split(" ")[0];
 
-  const tickets = getTickets()
-    .filter((ticket) => ticket.userId === session.id)
+  if (userTicketList) {
+    userTicketList.innerHTML =
+      '<div class="ticket-empty"><strong>Memuat tiket…</strong>Mengambil data terbaru dari server.</div>';
+  }
+
+  let tickets;
+  try {
+    tickets = await loadTickets();
+  } catch (error) {
+    if (userTicketList) {
+      userTicketList.innerHTML =
+        '<div class="ticket-empty"><strong>Gagal memuat tiket.</strong>' +
+        escapeHtml(error.message || "Periksa koneksi ke server.") +
+        "</div>";
+    }
+    handleExpiredSession(error);
+    return;
+  }
+
+  tickets = tickets
+    .filter((ticket) => String(ticket.userId) === String(session.id))
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   renderStats(userStats, countTickets(tickets));
@@ -1212,11 +1420,30 @@ function renderUserDashboard() {
   userTicketList.innerHTML = tickets.map(userTicketCard).join("");
 }
 
-function renderAdminDashboard() {
+async function renderAdminDashboard() {
   const session = getSession();
   if (!session || session.role !== "admin") return;
 
-  const tickets = getTickets().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  if (adminTicketList) {
+    adminTicketList.innerHTML =
+      '<div class="ticket-empty"><strong>Memuat laporan…</strong>Mengambil data terbaru dari server.</div>';
+  }
+
+  let tickets;
+  try {
+    tickets = await loadTickets();
+  } catch (error) {
+    if (adminTicketList) {
+      adminTicketList.innerHTML =
+        '<div class="ticket-empty"><strong>Gagal memuat laporan.</strong>' +
+        escapeHtml(error.message || "Periksa koneksi ke server.") +
+        "</div>";
+    }
+    handleExpiredSession(error);
+    return;
+  }
+
+  tickets = tickets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   renderStats(adminStats, countTickets(tickets));
 
   if (!adminTicketList) return;
@@ -1234,7 +1461,7 @@ function renderAdminDashboard() {
 }
 
 if (ticketForm) {
-  ticketForm.addEventListener("submit", (event) => {
+  ticketForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const session = getSession();
     if (!session || session.role !== "user") {
@@ -1264,6 +1491,37 @@ if (ticketForm) {
     }
     if (!valid) return;
 
+    if (!API.offline) {
+      try {
+        const data = await API.request("tickets.php?action=create", {
+          method: "POST",
+          body: { category: category, subject: subject, message: message },
+        });
+
+        ticketForm.reset();
+        const counter = $("#ticketCount");
+        if (counter) counter.textContent = "0";
+        await renderUserDashboard();
+        toast(
+          "success",
+          "Pengaduan terkirim",
+          "Nomor tiket " + data.ticket.id + ". Pantau balasan admin di daftar tiket."
+        );
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          const fields = error.fields || {};
+          if (fields.category) setFieldError("ticketCategory", fields.category);
+          if (fields.subject) setFieldError("ticketSubject", fields.subject);
+          if (fields.message) setFieldError("ticketMessage", fields.message);
+          toast("error", "Gagal mengirim", error.message);
+          handleExpiredSession(error);
+          return;
+        }
+      }
+    }
+
+    /* Mode cadangan tanpa PHP. */
     const tickets = getTickets();
     const ticket = {
       id: "TKT-" + uid().slice(-6).toUpperCase(),
@@ -1289,13 +1547,37 @@ if (ticketForm) {
 }
 
 if (userTicketList) {
-  userTicketList.addEventListener("click", (event) => {
+  userTicketList.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-action='close']");
     if (!button) return;
+
     const id = button.dataset.id;
+    const session = getSession();
+    if (!session) return;
+
+    if (!API.offline) {
+      try {
+        await API.request("tickets.php?action=close", { method: "POST", body: { id: id } });
+        await renderUserDashboard();
+        toast("success", "Tiket ditutup", "Tiket " + id + " ditandai selesai.");
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          if (!handleExpiredSession(error)) {
+            toast("error", "Gagal menutup tiket", error.message);
+          }
+          return;
+        }
+      }
+    }
+
+    /* Mode cadangan tanpa PHP. */
     const tickets = getTickets();
-    const ticket = tickets.find((item) => item.id === id);
+    const ticket = tickets.find(
+      (item) => item.id === id && String(item.userId) === String(session.id)
+    );
     if (!ticket) return;
+
     ticket.status = "closed";
     saveTickets(tickets);
     renderUserDashboard();
@@ -1304,15 +1586,12 @@ if (userTicketList) {
 }
 
 if (adminTicketList) {
-  adminTicketList.addEventListener("click", (event) => {
+  adminTicketList.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
 
     const id = button.dataset.id;
     const action = button.dataset.action;
-    const tickets = getTickets();
-    const ticket = tickets.find((item) => item.id === id);
-    if (!ticket) return;
 
     if (action === "toggle-reply") {
       const form = adminTicketList.querySelector('[data-ticket-id="' + id + '"]');
@@ -1326,23 +1605,47 @@ if (adminTicketList) {
       return;
     }
 
-    if (action === "close") {
-      ticket.status = "closed";
-      saveTickets(tickets);
-      renderAdminDashboard();
-      toast("success", "Tiket diselesaikan", id + " telah ditutup.");
-      return;
+    if (action !== "close" && action !== "reopen") return;
+
+    if (!API.offline) {
+      try {
+        await API.request("tickets.php?action=" + action, {
+          method: "POST",
+          body: { id: id },
+        });
+        await renderAdminDashboard();
+        toast(
+          action === "close" ? "success" : "info",
+          action === "close" ? "Tiket diselesaikan" : "Tiket dibuka kembali",
+          action === "close" ? id + " telah ditutup." : id + " kembali berstatus terbuka."
+        );
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          if (!handleExpiredSession(error)) {
+            toast("error", "Gagal memperbarui tiket", error.message);
+          }
+          return;
+        }
+      }
     }
 
-    if (action === "reopen") {
-      ticket.status = "open";
-      saveTickets(tickets);
-      renderAdminDashboard();
-      toast("info", "Tiket dibuka kembali", id + " kembali berstatus terbuka.");
-    }
+    /* Mode cadangan tanpa PHP. */
+    const tickets = getTickets();
+    const ticket = tickets.find((item) => item.id === id);
+    if (!ticket) return;
+
+    ticket.status = action === "close" ? "closed" : "open";
+    saveTickets(tickets);
+    renderAdminDashboard();
+    toast(
+      action === "close" ? "success" : "info",
+      action === "close" ? "Tiket diselesaikan" : "Tiket dibuka kembali",
+      action === "close" ? id + " telah ditutup." : id + " kembali berstatus terbuka."
+    );
   });
 
-  adminTicketList.addEventListener("submit", (event) => {
+  adminTicketList.addEventListener("submit", async (event) => {
     const form = event.target.closest(".reply-form");
     if (!form) return;
     event.preventDefault();
@@ -1362,6 +1665,28 @@ if (adminTicketList) {
       return;
     }
 
+    if (!API.offline) {
+      try {
+        await API.request("tickets.php?action=reply", {
+          method: "POST",
+          body: { id: id, message: text },
+        });
+        await renderAdminDashboard();
+        toast("success", "Balasan terkirim", "User akan melihat balasan pada tiket " + id + ".");
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          if (error.fields && error.fields.message) {
+            toast("error", "Balasan terlalu singkat", error.fields.message);
+          } else if (!handleExpiredSession(error)) {
+            toast("error", "Gagal mengirim balasan", error.message);
+          }
+          return;
+        }
+      }
+    }
+
+    /* Mode cadangan tanpa PHP. */
     const tickets = getTickets();
     const ticket = tickets.find((item) => item.id === id);
     if (!ticket) return;
@@ -1415,7 +1740,7 @@ if (ticketForm) {
 }
 
 if (contactForm) {
-  contactForm.addEventListener("submit", (event) => {
+  contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const ids = ["contactName", "contactEmail", "contactSubject", "contactMessage", "contactConsent"];
     clearErrors(ids);
@@ -1449,6 +1774,42 @@ if (contactForm) {
     }
     if (!valid) return;
 
+    if (!API.offline) {
+      try {
+        await API.request("contact.php", {
+          method: "POST",
+          body: {
+            name: name,
+            email: email,
+            subject: subject,
+            message: message,
+            consent: consent,
+          },
+        });
+
+        contactForm.reset();
+        if (contactCount) contactCount.textContent = "0";
+        toast(
+          "success",
+          "Pesan terkirim",
+          "Terima kasih, " + name.split(" ")[0] + ". Kami akan membalas maksimal 1x24 jam kerja."
+        );
+        return;
+      } catch (error) {
+        if (!API.offline) {
+          const fields = error.fields || {};
+          if (fields.name) setFieldError("contactName", fields.name);
+          if (fields.email) setFieldError("contactEmail", fields.email);
+          if (fields.subject) setFieldError("contactSubject", fields.subject);
+          if (fields.message) setFieldError("contactMessage", fields.message);
+          if (fields.consent) setFieldError("contactConsent", fields.consent);
+          toast("error", "Gagal mengirim pesan", error.message);
+          return;
+        }
+      }
+    }
+
+    /* Mode cadangan tanpa PHP. */
     const messages = store.get(STORAGE.contact, []);
     messages.push({
       id: uid("msg-"),
@@ -1470,6 +1831,25 @@ if (contactForm) {
 const yearEl = $("#year");
 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-renderAuthArea();
-router();
-observeReveals();
+async function initApp() {
+  /*
+   * Sinkronkan sesi dengan server PHP lebih dulu. Bila backend tidak
+   * tersedia (mis. dibuka lewat file://), sesi localStorage tetap dipakai.
+   */
+  if (!API.offline) {
+    try {
+      const data = await API.request("auth.php?action=me");
+      setSession(data.user || null);
+    } catch (error) {
+      if (!API.offline) {
+        console.warn("[EtikaSosial] Gagal memeriksa sesi:", error.message);
+      }
+    }
+  }
+
+  renderAuthArea();
+  router();
+  observeReveals();
+}
+
+initApp();
